@@ -26,6 +26,7 @@ import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
@@ -48,7 +49,8 @@ import java.util.Random;
 public class TestForm {
    Form fd;
     Resources theme = UIManager.initFirstTheme("/theme");
-    
+    Media media = MediaManager.createBackgroundMedia("file:///C:/Users/nouri/Downloads/WorkshopParsingJson/WorkshopOarsingJson/src/com/mycompany/myapp/gui/wrong-buzzer-sound-effect.mp3");
+    Media med = MediaManager.createBackgroundMedia("file:///C:/Users/nouri/Downloads/WorkshopParsingJson/WorkshopOarsingJson/src/com/mycompany/myapp/gui/aaaa.mp3");
     private int shiftColor(int color, double factor) {
         return ColorUtil.rgb(
                 (int)Math.min(ColorUtil.red(color) * factor, 255) , 
@@ -149,6 +151,7 @@ k++;
                 @Override
                 public void actionPerformed(ActionEvent evt) {
              //Dialog.show("Alerte", "etes vous surz de vouloir supprimer", "Ok", null);
+             med.play();
              Boolean x =Dialog.show("Attention!!!", "vous voulez supprimer le produit "+aa.getId_article(),"Oui", "Non");
              if(x)
              { ms.Delete(aa.getId_article(),m.getIdMagazin());
@@ -212,13 +215,16 @@ colors[k]=ColorUtil.GRAY;
             
             Button b1 = new Button("envoyer email");
             Button b2 = new Button("envoyer sms");
+             b1.getAllStyles().setFgColor(ColorUtil.MAGENTA);
+         
+            b2.getAllStyles().setFgColor(ColorUtil.YELLOW);
              b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt)
                 {
                 
                 Display.getInstance().sendMessage(ss, "Debo "+m.getIdMagazin()+"est vide", me);
-                ms.send(m.getIdMagazin(),"iskanderregaieg3@gmail.com","ali");
+                //ms.send(m.getIdMagazin(),"iskanderregaieg3@gmail.com","ali");
                 }});
               b2.addActionListener(new ActionListener() {
                 @Override
@@ -233,11 +239,16 @@ colors[k]=ColorUtil.GRAY;
                         
                     }
                 }});
-               Container cc = new Container(new BoxLayout(BoxLayout.X_AXIS));
+              Container cc = new Container(new FlowLayout(CENTER,CENTER));
           cc.addAll(b1,b2);
           fd.add(cc);
         }
         else {
+           
+            Label x = new Label("     ");
+         Container cm = new Container(new BoxLayout(BoxLayout.X_AXIS));
+         cm.add(x);
+         fd.add(cm);
             fd.add(c);
         }
         

@@ -80,6 +80,9 @@ Button supps = new Button("changer");
             
             Button b1 = new Button("envoyer email");
             Button b2 = new Button("envoyer sms");
+            b1.getAllStyles().setFgColor(ColorUtil.MAGENTA);
+         
+            b2.getAllStyles().setFgColor(ColorUtil.YELLOW);
              b1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt)
