@@ -67,6 +67,9 @@ public class UpdatePwdForm extends Form {
              {   if(p1.getText().equals(SessionUser.getUser().getPassword())){
                     fs.modifierPwd(user.getId(), p2.getText());
                     Dialog.show("Success", "modification de votre mot de passe avec succéee" ,"Ok",null);
+                    Message m = new Message("Votre mot de passe à été changer le " + new Date().toString());
+                    String receipent[] ={user.getEmail()};
+                    Display.getInstance().sendMessage(receipent, "Alerte de sécurité", m);
                     }
              else{
                  Dialog.show("Attention", "Verifier votre mot de passe" ,"Ok",null);
