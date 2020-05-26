@@ -17,6 +17,8 @@ import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkManager;
 import com.codename1.processing.Result;
 import com.codename1.ui.Button;
+import static com.codename1.ui.CN.EAST;
+import static com.codename1.ui.CN.SOUTH;
 import static com.codename1.ui.Component.CENTER;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
@@ -26,9 +28,11 @@ import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.Slider;
+import com.codename1.ui.TextField;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
+import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.list.DefaultListModel;
 import com.codename1.ui.plaf.Border;
@@ -117,7 +121,26 @@ Form fe = new Form("liste des magazins du magazinier "+name, BoxLayout.y());
        
         
         ArrayList<Magazin> lev = ms.getListMagazins(idU);
-       
+       Container rc = new Container(new BorderLayout());  
+     TextField t = new TextField("", "recherche");
+     Button rec = new Button("Rechercher");
+     Button all = new Button("All");
+     rec.addActionListener((ev) -> {
+         if(t.getText().equals(""))
+         {
+              //media.play();
+    Dialog.show("Attention!!", "champs recherche vide", "Ok", null);
+         }
+         else{
+             new ListTasksForm(22, "ali", t.getText());
+       }});
+     all.addActionListener((ev) -> {
+         new ListTasksForm(22, "ali");
+       });
+     rc.addComponent(com.codename1.ui.layouts.BorderLayout.CENTER,t);
+     rc.addComponent(EAST, all);
+     rc.addComponent(SOUTH, rec);
+     fe.add(rc);
 Container cc = new Container(new BoxLayout(BoxLayout.X_AXIS));
             //Container cy = new Container(BoxLayout.y());
             Label idl = new Label("id Magazin");
@@ -226,6 +249,148 @@ else{
         });
        fe.getToolbar().addMaterialCommandToLeftSideMenu("profil", FontImage.MATERIAL_PEOPLE, ev -> new ListTasksForm(22,"ali"));
         fe.getToolbar().addMaterialCommandToLeftSideMenu("magazins", FontImage.MATERIAL_HOME_WORK, ev -> new ListTasksForm(22,"ali"));
+        fe.getToolbar().addMaterialCommandToLeftSideMenu("logout", FontImage.MATERIAL_LOGOUT, ev -> new LoginForm());
+        fe.show();
+        
+    }
+public ListTasksForm(int idU,String name,String rech)  {
+       //Media media = MediaManager.createBackgroundMedia("file:///C:/Users/nouri/Downloads/WorkshopParsingJson/WorkshopOarsingJson/src/com/mycompany/myapp/gui/wrong-buzzer-sound-effect.mp3");
+   // Media med = MediaManager.createBackgroundMedia("file:///C:/Users/nouri/Downloads/WorkshopParsingJson/WorkshopOarsingJson/src/com/mycompany/myapp/gui/aaaa.mp3");
+Form fe = new Form("liste des magazins du magazinier "+name, BoxLayout.y());
+
+        ArrayList<Magazin> lev = ms.recherche(idU,rech);
+        if(lev.isEmpty())
+         {
+              //med.play();
+    Dialog.show("Attention!!", "résultat vide", "Ok", null);
+         }
+       Container rc = new Container(new BorderLayout());  
+     TextField t = new TextField("", "recherche");
+     Button rec = new Button("Rechercher");
+     Button all = new Button("All");
+     rec.addActionListener((ev) -> {
+         new ListTasksForm(22, "ali", t.getText());
+       });
+     all.addActionListener((ev) -> {
+         new ListTasksForm(22, "ali");
+       });
+   
+ rc.addComponent(com.codename1.ui.layouts.BorderLayout.CENTER,t);
+     rc.addComponent(EAST, all);
+     rc.addComponent(SOUTH, rec);
+     fe.add(rc);
+Container cc = new Container(new BoxLayout(BoxLayout.X_AXIS));
+            //Container cy = new Container(BoxLayout.y());
+            Label idl = new Label("id Magazin");
+    
+         idl.getAllStyles().setFgColor(ColorUtil.BLUE);
+           
+            Label locationl = new Label("Location       ");
+              locationl.getAllStyles().setFgColor(ColorUtil.BLUE);
+              
+             Label categoryy = new Label ("Category");
+               categoryy.getAllStyles().setFgColor(ColorUtil.BLUE);
+            Label capacityl = new Label ("Capacity");
+              capacityl.getAllStyles().setFgColor(ColorUtil.BLUE);
+            Label capacityRestl = new Label ("Capacity restante");
+              capacityRestl.getAllStyles().setFgColor(ColorUtil.BLUE);
+            Button capacityRestt = new Button ("détail");
+            
+              capacityRestt.getAllStyles().setFgColor(ColorUtil.BLUE);
+            cc.addAll(idl,locationl,categoryy,capacityl,capacityRestl,capacityRestt);
+         if(!lev.isEmpty())
+         {
+            fe.add(cc);}
+      
+        
+        for (Magazin mm : lev) {
+
+            Container c1 = new Container(new BoxLayout(BoxLayout.X_AXIS));
+            //Container cy = new Container(BoxLayout.y());
+            Label id = new Label(mm.getIdMagazin()+"");
+            Label id1 = new Label("Id Magazin");
+            id.getAllStyles().setFgColor(ColorUtil.BLACK);
+            id.getPreferredSize().setWidth(id1.getPreferredSize().getWidth());
+            id.getAllStyles().setAlignment(com.codename1.ui.Component.CENTER);
+            Label location = new Label(mm.getLocation()+"");
+             Label location1 = new Label("Location       ");
+            location.getAllStyles().setFgColor(ColorUtil.BLACK);
+            location.getPreferredSize().setWidth(location1.getPreferredSize().getWidth());
+            Label category = new Label(mm.getCategory()+""); 
+if(mm.getCategory().equals("cold"))
+{
+    category.getAllStyles().setFgColor(ColorUtil.MAGENTA);
+}
+else if(mm.getCategory().equals("brittle"))
+{
+    category.getAllStyles().setFgColor(ColorUtil.CYAN);
+}
+else{
+            category.getAllStyles().setFgColor(ColorUtil.GRAY);}
+            category.getPreferredSize().setWidth(categoryy.getPreferredSize().getWidth());
+            Label capacity = new Label (mm.getCapacity()+"");
+            Label capacity1 = new Label ("Capacity");
+            capacity.getAllStyles().setFgColor(ColorUtil.BLACK);
+            capacity.getPreferredSize().setWidth(capacity1.getPreferredSize().getWidth());
+            Label capacityRest = new Label (mm.getCapacityRest()+"");
+            Label capacityRest1 = new Label ("Capacity restante");
+            int a = mm.getCapacity()/3;
+            if(mm.getCapacityRest()==mm.getCapacity())
+            {
+                capacityRest.getAllStyles().setFgColor(ColorUtil.rgb(34, 139, 34));
+            }
+            
+            else if(mm.getCapacityRest()<=a)
+            {
+                capacityRest.getAllStyles().setFgColor(ColorUtil.rgb(255,0,0));
+            }
+                    else{
+            capacityRest.getAllStyles().setFgColor(ColorUtil.rgb(255,165,0));}
+            capacityRest.getPreferredSize().setWidth(capacityRest1.getPreferredSize().getWidth());
+            Button det = new Button("détail");
+            det.getAllStyles().setFgColor(ColorUtil.GREEN);
+            det.setSize(new Dimension(5, 5));
+             det.addActionListener((ev) -> {
+                try {
+                    new TestForm(mm);
+                } catch (IOException ex) {
+                    
+                }
+            }
+);
+                
+           
+            
+            c1.addAll(id,location,category,capacity,capacityRest,det);
+           c1.getAllStyles().setBorder(Border.createInsetBorder(2, ColorUtil.BLACK));
+    
+           
+
+            //fe.getAllStyles().setBgTransparency(200);
+            fe.add(c1);
+            //fe.add(c1);
+            /*fe.add(det); 
+            add(supp);*/
+            //fd.getToolbar().addMaterialCommandToLeftBar("", FontImage.MATERIAL_ARROW_BACK, e-> new ListTasksForm().show());
+                  
+//fe.show();
+        }
+        
+        
+      fe.getAllStyles().setBgColor(ColorUtil.WHITE);
+      fe.getToolbar().addMaterialCommandToLeftSideMenu("accueil", FontImage.MATERIAL_HOME, ev -> {
+            try {
+                new HomeForm();
+            } catch (IOException ex) {
+                
+            }
+        });
+       fe.getToolbar().addMaterialCommandToLeftSideMenu("profil", FontImage.MATERIAL_PEOPLE, ev -> {
+           new ListTasksForm(22,"ali");
+       });
+        fe.getToolbar().addMaterialCommandToLeftSideMenu("magazins", FontImage.MATERIAL_HOME_WORK, ev -> {
+            new ListTasksForm(22,"ali");
+       });
         fe.getToolbar().addMaterialCommandToLeftSideMenu("logout", FontImage.MATERIAL_LOGOUT, ev -> new LoginForm());
         fe.show();
         
