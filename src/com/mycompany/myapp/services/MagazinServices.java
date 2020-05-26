@@ -101,7 +101,45 @@ public class MagazinServices {
         return listArticles;
     
     }
+ public ArrayList<Magazin> recherche(int id,String str) {
+         ConnectionRequest con = new ConnectionRequest();
+        
+        con.setUrl("http://depo-pi.herokuapp.com/api/afficherAA/"+"/resources/recherche/"+id+"/"+str);
 
+        ArrayList<Magazin> listMagazins = new ArrayList<>();
+        con.addResponseListener((e) -> {
+            MagazinServices ms = new MagazinServices();
+            String jsonr = new String(con.getResponseData());
+
+            try {
+
+                JSONParser j = new JSONParser();
+                Map<String, Object> magazins = j.parseJSON(new CharArrayReader(jsonr.toCharArray()));
+                System.out.println(magazins);
+                List<Map<String, Object>> list = (List<Map<String, Object>>) magazins.get("root");
+                
+                for (Map<String, Object> obj : list) {
+               
+                    Magazin ev = new Magazin(
+                            obj.get("id").toString(),
+                            (int) Float.parseFloat(obj.get("capacity").toString()),
+                            obj.get("location").toString(),
+                            obj.get("category").toString(),
+                            (int) Float.parseFloat(obj.get("capacityRest").toString())
+                          );
+                    listMagazins.add(ev);
+
+                }
+
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+        });
+        System.out.println(listMagazins);
+        NetworkManager.getInstance().addToQueueAndWait(con);
+        return listMagazins;
+    
+    }
     public void Delete(int id_article, String idMagazin) {
         try{
            
